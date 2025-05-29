@@ -3,15 +3,18 @@ package au.com.pratap.model;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
-import lombok.Builder;
-import lombok.Data;
+import lombok.*;
 
 import java.time.LocalDate;
 import java.util.UUID;
 
-@Builder
+
+
 @Data
 @Entity
+@NoArgsConstructor
+@Getter
+@Setter
 public class Patient {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

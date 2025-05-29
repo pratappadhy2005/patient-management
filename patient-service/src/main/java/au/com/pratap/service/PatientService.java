@@ -1,5 +1,6 @@
 package au.com.pratap.service;
 
+import au.com.pratap.dto.PatientRequestDTO;
 import au.com.pratap.dto.PatientResponseDTO;
 import au.com.pratap.mapper.PatientMapper;
 import au.com.pratap.model.Patient;
@@ -29,4 +30,16 @@ public class PatientService {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Saves a new patient to the repository.
+     * This method converts the PatientRequestDTO to a Patient entity,
+     * saves it to the database, and then converts it back to a PatientResponseDTO.
+     *
+     * @param patientRequestDTO
+     * @return
+     */
+    public PatientResponseDTO savePatient(PatientRequestDTO patientRequestDTO) {
+        Patient newPatient = patientRepository.save(PatientMapper.toPatientEntity(patientRequestDTO));
+        return PatientMapper.toPatientResponseDTO(newPatient);
+    }
 }
