@@ -2,6 +2,7 @@ package au.com.pratap.service;
 
 import au.com.pratap.dto.PatientRequestDTO;
 import au.com.pratap.dto.PatientResponseDTO;
+import au.com.pratap.exception.EmailAlreadyExistsException;
 import au.com.pratap.mapper.PatientMapper;
 import au.com.pratap.model.Patient;
 import au.com.pratap.repository.PatientRepository;
@@ -40,6 +41,12 @@ public class PatientService {
      */
     public PatientResponseDTO savePatient(PatientRequestDTO patientRequestDTO) {
         Patient newPatient = patientRepository.save(PatientMapper.toPatientEntity(patientRequestDTO));
+
+        // Check if the email already exists in the repository
+        if(patientRepository.existsByEmail(newPatient.getEmail())) {
+            throw new EmailAlreadyExistsException("Email already exists: " + newPatient.getEmail());
+        }
+
         return PatientMapper.toPatientResponseDTO(newPatient);
     }
 }
