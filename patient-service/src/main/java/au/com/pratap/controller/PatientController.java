@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/patients")
@@ -39,6 +40,22 @@ public class PatientController {
     @PostMapping
     public ResponseEntity<PatientResponseDTO> createPatient(@Valid @RequestBody PatientRequestDTO patientRequestDTO) {
         final PatientResponseDTO patientResponseDTO = patientService.savePatient(patientRequestDTO);
+        return ResponseEntity.ok().body(patientResponseDTO);
+    }
+
+    /**
+     * Endpoint to update an existing patient.
+     * This method is not implemented yet.
+     *
+     * @param id the ID of the patient to update
+     * @param patientRequestDTO the updated patient details
+     * @return a response indicating that the method is not implemented.
+     */
+    @PutMapping("/{id}")
+    public ResponseEntity<PatientResponseDTO> updatePatient(
+            @PathVariable("id") UUID id,
+            @Valid @RequestBody PatientRequestDTO patientRequestDTO) {
+        final PatientResponseDTO patientResponseDTO = patientService.updatePatient(id, patientRequestDTO);
         return ResponseEntity.ok().body(patientResponseDTO);
     }
 
