@@ -2,9 +2,12 @@ package au.com.pratap.controller;
 
 import au.com.pratap.dto.PatientRequestDTO;
 import au.com.pratap.dto.PatientResponseDTO;
+import au.com.pratap.dto.validators.CreatePatientValidationGroup;
 import au.com.pratap.service.PatientService;
 import jakarta.validation.Valid;
+import jakarta.validation.groups.Default;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -38,7 +41,8 @@ public class PatientController {
      * @return a response indicating that the method is not implemented.
      */
     @PostMapping
-    public ResponseEntity<PatientResponseDTO> createPatient(@Valid @RequestBody PatientRequestDTO patientRequestDTO) {
+    public ResponseEntity<PatientResponseDTO> createPatient(@Validated({Default.class,
+            CreatePatientValidationGroup.class}) @RequestBody PatientRequestDTO patientRequestDTO) {
         final PatientResponseDTO patientResponseDTO = patientService.savePatient(patientRequestDTO);
         return ResponseEntity.ok().body(patientResponseDTO);
     }
@@ -54,7 +58,7 @@ public class PatientController {
     @PutMapping("/{id}")
     public ResponseEntity<PatientResponseDTO> updatePatient(
             @PathVariable("id") UUID id,
-            @Valid @RequestBody PatientRequestDTO patientRequestDTO) {
+            @Validated({Default.class}) @RequestBody PatientRequestDTO patientRequestDTO) {
         final PatientResponseDTO patientResponseDTO = patientService.updatePatient(id, patientRequestDTO);
         return ResponseEntity.ok().body(patientResponseDTO);
     }
