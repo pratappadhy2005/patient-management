@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 public class PatientService {
     private PatientRepository patientRepository;
 
-    public PatientService(PatientRepository patientRepository){
+    public PatientService(PatientRepository patientRepository) {
         this.patientRepository = patientRepository;
     }
 
@@ -27,8 +27,8 @@ public class PatientService {
      *
      * @return a list of PatientResponseDTO containing patient details.
      */
-    public List<PatientResponseDTO> getPatients(){
-       final List<Patient> patients = patientRepository.findAll();
+    public List<PatientResponseDTO> getPatients() {
+        final List<Patient> patients = patientRepository.findAll();
         return patients.stream()
                 .map(PatientMapper::toPatientResponseDTO)
                 .collect(Collectors.toList());
@@ -43,10 +43,8 @@ public class PatientService {
      * @return
      */
     public PatientResponseDTO savePatient(PatientRequestDTO patientRequestDTO) {
+        checkEmailAlreadyExists(patientRequestDTO.getEmail());
         Patient newPatient = patientRepository.save(PatientMapper.toPatientEntity(patientRequestDTO));
-
-        checkEmailAlreadyExists(newPatient.getEmail());
-
         return PatientMapper.toPatientResponseDTO(newPatient);
     }
 
@@ -63,7 +61,8 @@ public class PatientService {
         Patient patient = patientRepository.findById(id)
                 .orElseThrow(() -> new PatientNotFoundException("Patient not found with id: " + id));
 
-        checkEmailAlreadyExists(patientRequestDTO.getEmail());
+        // If the email is different from the current patient's email, check for duplicates
+        checkEmailAndIdAlreadyExists(patientRequestDTO.getEmail(), id);
 
         // Update patient details
         patient.setName(patientRequestDTO.getName());
@@ -78,8 +77,15 @@ public class PatientService {
 
     private void checkEmailAlreadyExists(String patientRequestDTO) {
         // Check if the email already exists in the repository
-        if(patientRepository.existsByEmail(patientRequestDTO)) {
+        if (patientRepository.existsByEmail(patientRequestDTO)) {
             throw new EmailAlreadyExistsException("Email already exists: " + patientRequestDTO);
+        }
+    }
+
+    private void checkEmailAndIdAlreadyExists(String email, UUID id) {
+        // Check if the email already exists in the repository
+        if (patientRepository.existsByEmailAndIdNot(email, id)) {
+            throw new EmailAlreadyExistsException("Email already exists: " + email);
         }
     }
 }
