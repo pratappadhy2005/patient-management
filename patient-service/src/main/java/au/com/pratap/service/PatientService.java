@@ -75,6 +75,15 @@ public class PatientService {
         return PatientMapper.toPatientResponseDTO(updatedPatient);
     }
 
+   /**
+     * Deletes a patient from the repository by ID.
+     *
+     * @param id the ID of the patient to delete
+     */
+    public void deletePatient(UUID id) {
+        patientRepository.deleteById(id);
+    }
+
     private void checkEmailAlreadyExists(String patientRequestDTO) {
         // Check if the email already exists in the repository
         if (patientRepository.existsByEmail(patientRequestDTO)) {
