@@ -1,0 +1,20 @@
+{
+  "id": "e458e4d8-218b-4e17-bff8-2fe9ca068001",
+  "importStreams": [
+    {
+      "id": "6e588af5-2a38-4796-bdc9-b91033f4c4ea",
+      "name": "proto-file",
+      "importerName": "ProtoFile",
+      "createMissingOperations": true,
+      "options": {
+        "files": [
+          "../../../../../../../../billing-service/src/main/proto/billing_service.proto"
+        ],
+        "importPaths": [],
+        "excludedFiles": []
+      }
+    }
+  ],
+  "authConfigs": [],
+  "certificates": []
+}

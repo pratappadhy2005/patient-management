@@ -1,0 +1,15 @@
+{
+  "details": {
+    "endpoint": "localhost:9001/BillingService/CreateBillingAccount",
+    "methodFqn": "BillingService.CreateBillingAccount",
+    "disableServerCertificateValidation": true
+  },
+  "requests": [
+    {
+      "location": "CreateBillingAccount-request.json"
+    }
+  ],
+  "operationType": "unary",
+  "invokerName": "grpc",
+  "importStreamId": "6e588af5-2a38-4796-bdc9-b91033f4c4ea"
+}
