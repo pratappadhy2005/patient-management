@@ -1,6 +1,6 @@
 {
   "details": {
-    "endpoint": "localhost:9001/BillingService/CreateBillingAccount",
+    "endpoint": "http://localhost:9001",
     "methodFqn": "BillingService.CreateBillingAccount",
     "disableServerCertificateValidation": true
   },
