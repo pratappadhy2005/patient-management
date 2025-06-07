@@ -4,6 +4,7 @@ import au.com.pratap.dto.PatientRequestDTO;
 import au.com.pratap.dto.PatientResponseDTO;
 import au.com.pratap.exception.EmailAlreadyExistsException;
 import au.com.pratap.exception.PatientNotFoundException;
+import au.com.pratap.grpc.BillingServiceGrpcClient;
 import au.com.pratap.mapper.PatientMapper;
 import au.com.pratap.model.Patient;
 import au.com.pratap.repository.PatientRepository;
@@ -16,10 +17,12 @@ import java.util.stream.Collectors;
 
 @Service
 public class PatientService {
-    private PatientRepository patientRepository;
+    private final PatientRepository patientRepository;
+    private final BillingServiceGrpcClient billingServiceGrpcClient;
 
-    public PatientService(PatientRepository patientRepository) {
+    public PatientService(PatientRepository patientRepository, BillingServiceGrpcClient billingServiceGrpcClient) {
         this.patientRepository = patientRepository;
+        this.billingServiceGrpcClient = billingServiceGrpcClient;
     }
 
     /**
@@ -45,6 +48,12 @@ public class PatientService {
     public PatientResponseDTO savePatient(PatientRequestDTO patientRequestDTO) {
         checkEmailAlreadyExists(patientRequestDTO.getEmail());
         Patient newPatient = patientRepository.save(PatientMapper.toPatientEntity(patientRequestDTO));
+        // Create a billing account for the new patient using gRPC
+        billingServiceGrpcClient.createBillingAccount(
+                newPatient.getId().toString(),
+                newPatient.getName(),
+                newPatient.getEmail()
+        );
         return PatientMapper.toPatientResponseDTO(newPatient);
     }
 
