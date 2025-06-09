@@ -5,6 +5,7 @@ import au.com.pratap.dto.PatientResponseDTO;
 import au.com.pratap.exception.EmailAlreadyExistsException;
 import au.com.pratap.exception.PatientNotFoundException;
 import au.com.pratap.grpc.BillingServiceGrpcClient;
+import au.com.pratap.kafka.KafkaProducer;
 import au.com.pratap.mapper.PatientMapper;
 import au.com.pratap.model.Patient;
 import au.com.pratap.repository.PatientRepository;
@@ -20,9 +21,12 @@ public class PatientService {
     private final PatientRepository patientRepository;
     private final BillingServiceGrpcClient billingServiceGrpcClient;
 
-    public PatientService(PatientRepository patientRepository, BillingServiceGrpcClient billingServiceGrpcClient) {
+    private final KafkaProducer kafkaProducer;
+
+    public PatientService(PatientRepository patientRepository, BillingServiceGrpcClient billingServiceGrpcClient, KafkaProducer kafkaProducer) {
         this.patientRepository = patientRepository;
         this.billingServiceGrpcClient = billingServiceGrpcClient;
+        this.kafkaProducer = kafkaProducer;
     }
 
     /**
@@ -54,6 +58,10 @@ public class PatientService {
                 newPatient.getName(),
                 newPatient.getEmail()
         );
+
+        // produce message into the Kafka topic
+        kafkaProducer.sendMessage(newPatient);
+
         return PatientMapper.toPatientResponseDTO(newPatient);
     }
 
