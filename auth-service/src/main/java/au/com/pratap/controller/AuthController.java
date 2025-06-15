@@ -1,7 +1,17 @@
 package au.com.pratap.controller;
 
+import au.com.pratap.dto.LoginRequestDTO;
+import au.com.pratap.dto.LoginResponseDTO;
 import au.com.pratap.service.AuthService;
+import io.swagger.v3.oas.annotations.Operation;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Optional;
 
 @RestController
 public class AuthController {
@@ -10,6 +20,19 @@ public class AuthController {
 
     public AuthController(AuthService authService) {
         this.authService = authService;
+    }
+
+    @Operation(summary = "Generate token on user login")
+    @PostMapping("/login")
+    public ResponseEntity<LoginResponseDTO> login(@RequestBody LoginRequestDTO loginRequestDTO) {
+        Optional<String> tokenOptional = authService.authenticate(loginRequestDTO);
+
+        if(tokenOptional.isEmpty()){
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build(); // Unauthorized
+        }
+
+        final String token = tokenOptional.get();
+        return ResponseEntity.ok(new LoginResponseDTO(token));
     }
 
 }
