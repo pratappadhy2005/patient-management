@@ -2,6 +2,7 @@ package au.com.pratap.service;
 
 import au.com.pratap.dto.LoginRequestDTO;
 import au.com.pratap.util.JwtUtil;
+import io.jsonwebtoken.JwtException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -25,6 +26,15 @@ public class AuthService {
                 .filter(u -> passwordEncorder.matches(loginRequestDTO.getPassword(), u.getPassword()))
                 .map(u -> jwtUtil.generateToken(u.getEmail(), u.getRole()));
         return token;
+    }
+
+    public boolean validateToken(String token) {
+        try {
+            jwtUtil.validateToken(token);
+            return true;
+        } catch (JwtException e) {
+            return false;
+        }
     }
 
 }
