@@ -1,6 +1,6 @@
 # 🏥 Patient Management Microservices System
 
-A modular, event-driven **Patient Management System** built using Spring Boot microservices architecture. This project leverages **Apache Kafka** for asynchronous messaging, **PostgreSQL** for data persistence, and **RPC (via Feign or gRPC)** for direct service communication.
+A modular, event-driven **Patient Management System** built using Spring Boot microservices architecture. This project leverages **Apache Kafka** for asynchronous messaging, **PostgreSQL** for data persistence, and **RPC (via Feign or gRPC)** for direct service communication using mutiple ways.
 
 ---
 
